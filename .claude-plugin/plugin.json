@@ -1,0 +1,12 @@
+{
+  "name": "pygmalion",
+  "displayName": "Pygmalion",
+  "version": "0.1.0",
+  "description": "Interview-driven Claude Code skill for creating subagents — asks the right questions, researches best practices and the live subagent schema, and writes robust, token-efficient .claude/agents/*.md files.",
+  "author": {
+    "name": "Aleksander"
+  },
+  "homepage": "https://github.com/aleknitka/pygmalion",
+  "repository": "https://github.com/aleknitka/pygmalion",
+  "keywords": ["claude-code", "subagents", "agent-creation", "skill"]
+}

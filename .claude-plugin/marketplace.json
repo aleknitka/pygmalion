@@ -1,0 +1,14 @@
+{
+  "name": "pygmalion",
+  "description": "Marketplace for the pygmalion plugin: an interview-driven Claude Code skill for creating subagents.",
+  "owner": {
+    "name": "Aleksander"
+  },
+  "plugins": [
+    {
+      "name": "pygmalion",
+      "source": "./",
+      "description": "Interview-driven Claude Code skill for creating subagents."
+    }
+  ]
+}
