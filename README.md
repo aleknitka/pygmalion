@@ -1,4 +1,14 @@
+<div align="center">
+  <img src="media/pygmalion_logo.png" alt="Pygmalion logo" width="200">
+</div>
+
 # Agent Creator
+
+**Why "Pygmalion"?** In Greek myth, the sculptor Pygmalion carved a statue so lifelike that it was brought to life. That's the shape of what this skill does: you describe what you want, it crafts a `.claude/agents/*.md` definition from that description, and the result is something that then acts on its own — a subagent, not a static artifact.
+
+<div align="center">
+  <a href="https://code.claude.com/docs/en/claude-code"><img src="https://img.shields.io/badge/Claude_Code-555?logo=claude" alt="Claude Code"></a>
+</div>
 
 A Claude Code Skill that streamlines creating [Claude Code subagents](https://code.claude.com/docs/en/sub-agents). Instead of hand-writing a `.claude/agents/<name>.md` file and guessing at frontmatter, it interviews you about what the subagent should do, researches current best practices and the live subagent schema, and writes a robust, token-efficient agent file at whichever level you choose — hooks, guardrails, and a companion Skill included, if you want them.
 
@@ -25,6 +35,14 @@ This repo is packaged as a Claude Code **plugin** named `pygmalion`, distributed
 ```
 
 Once installed, the skill runs as `/pygmalion:agent-creator` (namespaced by the plugin name).
+
+### Alternative: skills.sh
+
+The repo's `skills/agent-creator/SKILL.md` layout is also directly installable via [skills.sh](https://skills.sh)'s CLI, no separate submission needed:
+
+```
+npx skills add aleknitka/pygmalion
+```
 
 ### Alternative: unpackaged, for local hacking on the skill itself
 
