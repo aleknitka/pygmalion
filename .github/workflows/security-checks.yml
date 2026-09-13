@@ -1,0 +1,56 @@
+name: Security checks
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    name: Scan skill content for injection/tampering
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check for unexpectedly executable files
+        run: |
+          set -euo pipefail
+          bad=$(git ls-files -s | awk '$1 == "100755" {print $4}' | grep -v '\.sh$' || true)
+          if [ -n "$bad" ]; then
+            echo "::error::Files marked executable with no legitimate reason to be (only *.sh should be +x):"
+            echo "$bad"
+            exit 1
+          fi
+
+      - name: Scan for hidden/invisible Unicode (prompt-injection hiding technique)
+        run: |
+          set -euo pipefail
+          matches=$(git grep -nP '[\x{200B}\x{200C}\x{200D}\x{2060}\x{FEFF}\x{202A}-\x{202E}\x{2066}-\x{2069}]' -- '*.md' '*.json' '*.sh' || true)
+          if [ -n "$matches" ]; then
+            echo "::error::Hidden/invisible Unicode characters found (zero-width, BOM, or bidi-override) — these can hide instructions from a human reviewer while an LLM still reads them:"
+            echo "$matches"
+            exit 1
+          fi
+
+      - name: Scan for suspicious instruction patterns (manual review, non-blocking)
+        run: |
+          set -euo pipefail
+          matches=$(git grep -niE 'curl |wget |base64 -d|eval\(|exec\(|ignore (all|previous) instructions|do not (tell|mention)|bypass (safety|permission)|exfiltrat|rm -rf' -- '*.md' '*.json' '*.sh' || true)
+          if [ -n "$matches" ]; then
+            echo "::warning::Keyword matches worth a human read before merging (not necessarily malicious):"
+            echo "$matches"
+          fi
+
+  plugin-validate:
+    name: Validate plugin/marketplace manifests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install -g @anthropic-ai/claude-code
+      - run: claude plugin validate . --strict
